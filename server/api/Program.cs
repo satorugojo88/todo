@@ -9,7 +9,7 @@ using Microsoft.Extensions.Options;
 var builder = WebApplication.CreateBuilder(args);
 var appOptions = builder.Services.AddAppOptions(builder.Configuration);
 
-Console.WriteLine(JsonSerializer.Serialize(appOptions));
+Console.WriteLine("The appOptions: "+JsonSerializer.Serialize(appOptions));
 
 builder.Services.AddDbContext<TodoDbContext>(options =>
 {
