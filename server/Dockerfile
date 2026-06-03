@@ -20,18 +20,18 @@
 FROM mcr.microsoft.com/dotnet/sdk:10.0-alpine AS build
 WORKDIR /src
 
-# 1. Copy project and restore targeting alpine-arm64
+# 1. Copy project and restore targeting alpine-arm64 --runtime linux-musl-arm64 on Surface Pro or Macbook Air
 COPY ["./", "."]
-RUN dotnet restore "api/api.csproj" --runtime linux-musl-arm64
+RUN dotnet restore "api/api.csproj" --runtime linux-musl-x64  \
 
 # 2. Copy the rest of the source
 #COPY . .
 
-# 3. Publish targeting alpine-arm64
+# 3. Publish targeting alpine-arm64 --runtime linux-musl-arm64 on Surface Pro or Macbook Air
 RUN dotnet publish "api/api.csproj" \
     -c Release \
     -o /app/publish \
-    --runtime linux-musl-arm64 \
+    --runtime linux-musl-x64 \
     --self-contained true \
     --no-restore \
     /p:PublishSingleFile=true

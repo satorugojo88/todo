@@ -9,6 +9,11 @@ function App() {
 
   return (
     <>
+      <button onClick={() => {
+        fetch("https://server-glowing-bird-431.fly.dev")
+        .then((res) => console.log(res))
+        .catch((err) => console.log(err))
+      }}>CLICK ME</button>
       <section id="center">
         <div className="hero">
           <img src={heroImg} className="base" width="170" height="179" alt="" />
