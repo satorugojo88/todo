@@ -1,37 +1,34 @@
-﻿#FROM mcr.microsoft.com/dotnet/sdk:10.0-alpine AS build
-#WORKDIR /src
-#COPY ["./", "."]
-#RUN dotnet publish "api/api.csproj" \
-#    -c Release \
-#    -o /app/publish \
-#    --runtime linux-musl-x64 \
-#    --self-contained true \
-#    /p:PublishSingleFile=true
-#
-#FROM mcr.microsoft.com/dotnet/runtime-deps:10.0-alpine
-#WORKDIR /app
-#COPY --from=build /app/publish .
-#ENV ASPNETCORE_URLS=http://0.0.0.0:8080
-#EXPOSE 8080
-#
-#ENTRYPOINT ["./api"]
+﻿# Multi Architecture
 
 # --- Stage 1: Build ---
 FROM mcr.microsoft.com/dotnet/sdk:10.0-alpine AS build
 WORKDIR /src
 
-# 1. Copy project and restore targeting alpine-arm64 --runtime linux-musl-arm64 on Surface Pro or Macbook Air
+# Docker automatically populates this variable with 'amd64' or 'arm64'
+ARG TARGETARCH
+
+# 1. Copy project and restore targeting target architecture
 COPY ["./", "."]
-RUN dotnet restore "api/api.csproj" --runtime linux-musl-x64  \
+RUN if [ "$TARGETARCH" = "amd64" ]; then \
+            RID="linux-musl-x64"; \
+        else \
+            RID="linux-musl-arm64"; \
+        fi && \
+    dotnet restore "api/api.csproj"  --runtime $RID
 
 # 2. Copy the rest of the source
 #COPY . .
 
-# 3. Publish targeting alpine-arm64 --runtime linux-musl-arm64 on Surface Pro or Macbook Air
-RUN dotnet publish "api/api.csproj" \
+# 3. Publish 
+RUN if [ "$TARGETARCH" = "amd64" ]; then \
+             RID="linux-musl-x64"; \
+         else \
+             RID="linux-musl-arm64"; \
+         fi && \
+    dotnet publish "api/api.csproj" \
     -c Release \
     -o /app/publish \
-    --runtime linux-musl-x64 \
+    --runtime $RID \
     --self-contained true \
     --no-restore \
     /p:PublishSingleFile=true
