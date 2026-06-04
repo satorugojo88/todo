@@ -3,17 +3,14 @@ import reactLogo from './assets/react.svg'
 import viteLogo from './assets/vite.svg'
 import heroImg from './assets/hero.png'
 import './App.css'
+import {finalUrl} from './baseUrl.ts';
 
 function App() {
   const [count, setCount] = useState(0)
 
   return (
     <>
-      <button onClick={() => {
-        fetch("https://server-glowing-bird-431.fly.dev")
-        .then((res) => console.log(res))
-        .catch((err) => console.log(err))
-      }}>CLICK ME</button>
+     
       <section id="center">
         <div className="hero">
           <img src={heroImg} className="base" width="170" height="179" alt="" />
@@ -25,7 +22,12 @@ function App() {
           <p>
             Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
           </p>
-        </div>
+        </div> 
+        <button onClick={() => {
+        fetch(finalUrl)
+          .then((res) => console.log(res))
+          .catch((err) => console.log(err))
+      }}>CLICK ME</button>
         <button
           type="button"
           className="counter"
